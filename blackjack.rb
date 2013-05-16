@@ -28,8 +28,9 @@ end
 # player_name = gets.chomp
 
 play_again = true
+player_busted = false
 
-while play_again == true
+while play_again	
 	puts ""
 	puts "Hi! Welcome to Blackjack! Shuffling cards..."
 	puts ""
@@ -61,28 +62,48 @@ while play_again == true
 	puts "Player has: #{player_hand[0][0]}#{player_hand[0][1]} #{player_hand[1][0]}#{player_hand[1][1]} for a total of #{player_total}."
 	puts "Dealer shows: #{dealer_hand[0][0]}#{dealer_hand[0][1]}"
 	puts ""
-	puts "*** Please select your action: H (hit) or S (stay)"
+	
+	if player_total == 21
+			if dealer_total == 21
+				puts "YOU AND THE DEALER BOTH HAVE BLACKJACK.  PUSH."
+			else	
+				puts	"CONGRATULATIONS!  YOU HIT BLACKJACK!"
+			end
+	end
 
-	player_action = gets.chomp
+	while player_total < 21
 
-	while player_action.upcase == 'H'
-		
-		player_hand << deck.pop
-		player_total = calculate_hand_total(player_hand)
-
-		puts ""
-		puts "===> You were dealt the #{player_hand.last[0]}#{player_hand.last[1]} for a total of #{player_total}."
-		puts ""
-
-		if player_total > 21
-			puts "BUSTED!  GAME OVER."
-			player_busted = true
+		if dealer_total == 21
+			puts "DEALER HAS BLACKJACK."
 			break
-		else
-			puts "*** Please select your action: H (hit) or S (stay)"
-			player_action = gets.chomp
 		end
 
+		puts "*** Please select your action: H (hit) or S (stay)"
+		player_action = gets.chomp
+
+		if player_action.upcase == 'H'
+			player_hand << deck.pop
+			player_total = calculate_hand_total(player_hand)
+
+			puts ""
+			puts "===> You were dealt the #{player_hand.last[0]}#{player_hand.last[1]}."
+			puts ""
+
+			print "Player has: "
+			player_hand.each { |r,s| print r+s+ " "} 
+			puts "for a total of #{player_total}."
+			puts ""
+
+			if player_total > 21
+				puts "YOU BUSTED!  GAME OVER."
+				player_busted = true
+				break
+			end
+		elsif player_action.upcase == 'S'
+			break
+		else
+			puts "Invalid command. Please enter H or S."
+		end
 	end
 
 	puts ""
@@ -112,12 +133,12 @@ while play_again == true
 		puts "PUSH."
 	end
 
-	puts ""
-	puts "Do you want to play again? Y for Yes"
-	if gets.chomp.upcase == 'Y'
-		play_again = true
-	else
-		play_again = false
-	end
+	puts "Would you like to play again? Y for Yes"
+	  if gets.chomp.upcase == "Y"
+	  	system('clear')
+		  next 
+		else 
+			play_again = false
+		end
 end
 
